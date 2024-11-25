@@ -1,0 +1,29 @@
+name: social_media_x
+description: A new Flutter project.
+
+# Define si el paquete se publica o no. 'none' es correcto para un proyecto privado.
+publish_to: 'none' 
+
+# Versión del proyecto. Asegúrate de actualizarlo conforme desarrolles.
+version: 0.1.0+1
+
+# Especifica el entorno de SDK que estás utilizando.
+environment:
+  sdk: '>=3.5.0 <4.0.0' # Especifica un rango compatible con tu versión.
+
+dependencies:
+  flutter:
+    sdk: flutter
+  font_awesome_flutter: ^10.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0 # Linter para seguir las mejores prácticas en Flutter.
+
+# Configuración específica de Flutter.
+flutter:
+  uses-material-design: true # Usa diseño Material para íconos y widgets.
+  assets: # Aquí defines tus activos (imágenes, etc.)
+    - assets/images/ocean.jpeg
+    - assets/images/kenshi.jpeg
