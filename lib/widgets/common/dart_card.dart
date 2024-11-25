@@ -69,7 +69,7 @@ class TwitterPostCard extends StatelessWidget {
                             ),
                           const SizedBox(width: 4),
                           Text(
-                            "@$username · $timeAgo",
+                            "@$username",
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],

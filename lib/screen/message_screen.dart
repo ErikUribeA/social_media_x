@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_x/widgets/common/floating_button.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
@@ -6,14 +7,11 @@ class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        shape: const CircleBorder(), // Mantener la forma circular
-        child: const Icon(Icons.mark_email_read, color: Colors.white),
+      floatingActionButton: FloatingButton(
         onPressed: () {
-          // Aquí puedes definir la acción del botón flotante
-          
+          ('Floating Action Button Pressed!');
         },
+        icon: Icons.email,
       ),
       body: const Center(
         child: Text('Messages Screen'),

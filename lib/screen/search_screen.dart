@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_x/widgets/common/floating_button.dart';
+import 'package:social_media_x/widgets/common/tab_bar_header.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -8,32 +10,24 @@ class SearchScreen extends StatelessWidget {
     return DefaultTabController(
       length: 5, // Número de pestañas
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, color: Colors.white),
-          onPressed: () {},
+        floatingActionButton: FloatingButton(
+          onPressed: () {
+            ('Floating Action Button Pressed!');
+          },
+          icon: Icons.add,
         ),
         backgroundColor: Colors.black,
         appBar: AppBar(
+          elevation: 0,
           backgroundColor: Colors.black,
-          elevation: 0, // Sin sombra
-          title: Container(
-            alignment: Alignment.centerLeft, // Alinea la TabBar a la izquierda
-            child: const TabBar(
-              isScrollable: false,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white70,
-              indicatorColor: Colors.blue,
-              indicatorWeight: 3.0,
-              tabs: [
-                Tab(text: 'For you'),
-                Tab(text: 'Trending'),
-                Tab(text: 'News'),
-                Tab(text: 'Sports'),
-                Tab(text: 'Entertainment'),
-              ],
-            ),
+          title: const TabBarHeader(
+            tabs: [
+              Tab(text: 'For you'),
+              Tab(text: 'Trending'),
+              Tab(text: 'News'),
+              Tab(text: 'Sports'),
+              Tab(text: 'Entertainment'),
+            ],
           ),
         ),
         body: const TabBarView(

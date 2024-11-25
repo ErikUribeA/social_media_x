@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:social_media_x/widgets/common/floating_button.dart';
+import 'package:social_media_x/widgets/common/tab_bar_header.dart';
 
 class PeopleScreen extends StatelessWidget {
   const PeopleScreen({super.key});
@@ -8,24 +10,20 @@ class PeopleScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, color: Colors.white),
-          onPressed: () {},
+        floatingActionButton: FloatingButton(
+          onPressed: () {
+            ('Floating Action Button Pressed!');
+          },
+          icon: Icons.add,
         ),
         backgroundColor: Colors.black,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.black,
-          title: const TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.blue,
-            indicatorWeight: 3.0,
+          title: const TabBarHeader(
             tabs: [
-              Tab(text: 'Home'), // Primera pestaña
-              Tab(text: 'Explore'), // Segunda pestaña
+              Tab(text: 'Home'),
+              Tab(text: 'Explore'),
             ],
           ),
         ),

@@ -1,77 +1,89 @@
 import 'package:flutter/material.dart';
-import 'package:social_media_x/widgets/dart_card.dart';
+import 'package:social_media_x/models/post_model.dart';
+import 'package:social_media_x/services/api_service.dart';
+import 'package:social_media_x/widgets/common/floating_button.dart';
+import 'package:social_media_x/widgets/common/tab_bar_header.dart';
+import 'package:social_media_x/widgets/homePage/tab_bar_view_content.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ApiService _apiService = ApiService();
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, dynamic>> posts = [];
+
+  List<Post> forYouPosts = []; // Para "For You"
+  List<Post> followingPosts = []; // Para "Following"
   bool isLoading = false;
+  int page = 1;
 
   @override
   void initState() {
     super.initState();
     _loadInitialPosts();
-    _scrollController.addListener(_onScroll);
+    _loadFollowingPosts();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        _loadMorePosts();
+      }
+    });
   }
 
-  void _loadInitialPosts() {
-    // Cargar los posts iniciales
-    setState(() {
-      posts = List.generate(10, (index) {
-        return {
-          'avatarUrl': index % 2 == 0 ? 'assets/images/ocean.jpeg' : 'assets/images/kenshi.jpeg',
-          'name': 'User $index',
-          'username': 'username_$index',
-          'timeAgo': '${index}h',
-          'content': 'Content of post $index',
-          'imageUrl': index % 2 == 0 ? 'assets/images/ocean.jpeg' : 'assets/images/kenshi.jpeg',
-          'comments': index * 5,
-          'retweets': index * 10,
-          'likes': index * 20,
-          'views': index * 100,
-        };
+  Future<void> _loadInitialPosts() async {
+    setState(() => isLoading = true);
+    try {
+      final data = await _apiService.fetchPosts(page: 1, limit: 10);
+      setState(() {
+        forYouPosts = data.map((json) => Post.fromJson(json)).toList();
+        page = 2;
       });
-    });
+    } catch (e) {
+      ('Error fetching posts: $e');
+    } finally {
+      setState(() => isLoading = false);
+    }
   }
 
-  void _loadMorePosts() async {
+  Future<void> _loadFollowingPosts() async {
+    try {
+      setState(() {
+        followingPosts = List.generate(50, (index) {
+          return Post(
+            avatarUrl: index % 2 == 0 ? 'assets/images/ocean.jpeg' : 'assets/images/kenshi.jpeg',
+            name: 'User $index',
+            username: 'following_$index',
+            timeAgo: '${index + 1}h',
+            content: 'Content for Following Post $index',
+            imageUrl: index % 2 == 0 ? 'assets/images/ocean.jpeg' : 'assets/images/kenshi.jpeg',
+            comments: index * 2,
+            retweets: index * 4,
+            likes: index * 8,
+            views: index * 16,
+          );
+        });
+      });
+    } catch (e) {
+      ('Error loading following posts: $e');
+    }
+  }
+
+  Future<void> _loadMorePosts() async {
     if (isLoading) return;
-    setState(() {
-      isLoading = true;
-    });
-
-    // Simular una carga asincrónica
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      posts.addAll(List.generate(10, (index) {
-        return {
-          'avatarUrl': (posts.length + index) % 2 == 0 ? 'assets/images/ocean.jpeg' : 'assets/images/kenshi.jpeg',
-          'name': 'User ${posts.length + index}',
-          'username': 'username_${posts.length + index}',
-          'timeAgo': '${posts.length + index}h',
-          'content': 'Content of post ${posts.length + index}',
-          'imageUrl': (posts.length + index) % 2 == 0 ? 'assets/images/ocean.jpeg' : 'assets/images/kenshi.jpeg',
-          'comments': (posts.length + index) * 5,
-          'retweets': (posts.length + index) * 10,
-          'likes': (posts.length + index) * 20,
-          'views': (posts.length + index) * 100,
-        };
-      }));
-      isLoading = false;
-    });
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      _loadMorePosts();
+    setState(() => isLoading = true);
+    try {
+      final data = await _apiService.fetchPosts(page: page, limit: 10);
+      setState(() {
+        forYouPosts.addAll(data.map((json) => Post.fromJson(json)).toList());
+        page++;
+      });
+    } catch (e) {
+      ('Error loading more posts: $e');
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
@@ -86,62 +98,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
-          shape: const CircleBorder(),
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            // Acción del botón flotante
-          },
-        ),
         backgroundColor: Colors.black,
         appBar: AppBar(
-          elevation: 0, // Sin sombra
-          title: const TabBar(
-            labelColor: Colors.white, 
-            unselectedLabelColor: Colors.white70, 
-            indicatorColor: Colors.blue, 
-            indicatorWeight: 3.0, 
+          elevation: 0,
+          backgroundColor: Colors.black,
+          title: const TabBarHeader(
             tabs: [
-              Tab(
-                text: 'For you',
-              ),
+              Tab(text: 'For You'),
               Tab(text: 'Following'),
             ],
           ),
         ),
-        body: ListView.builder(
-          controller: _scrollController,
-          itemCount: posts.length + 1, // +1 for the loading indicator
-          itemBuilder: (context, index) {
-            if (index == posts.length) {
-              // Muestra un indicador de carga al final
-              return isLoading
-                  ? const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            }
-            final post = posts[index];
-            return TwitterPostCard(
-              avatarUrl: post['avatarUrl'],
-              name: post['name'],
-              username: post['username'],
-              timeAgo: post['timeAgo'],
-              content: post['content'],
-              imageUrl: post['imageUrl'],
-              comments: post['comments'],
-              retweets: post['retweets'],
-              likes: post['likes'],
-              views: post['views'],
-            );
+        floatingActionButton: FloatingButton(
+          onPressed: () {
+            ('Floating Action Button Pressed!');
           },
+          icon: Icons.add,
+        ),
+        body: TabBarViewContent(
+          forYouPosts: forYouPosts, // Pasa los posts de "For You"
+          followingPosts: followingPosts, // Pasa los posts de "Following"
+          isLoading: isLoading,
+          onScroll: _scrollController,
         ),
       ),
     );
