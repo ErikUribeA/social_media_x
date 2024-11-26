@@ -58,7 +58,7 @@ class TwitterPostCard extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          if (name == "WildLife") // Ejemplo de verificación
+                          if (name == "Sherry Wehner") // Ejemplo de verificación
                             const Padding(
                               padding: EdgeInsets.only(left: 4.0),
                               child: Icon(

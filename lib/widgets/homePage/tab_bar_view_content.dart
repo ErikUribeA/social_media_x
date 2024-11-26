@@ -12,8 +12,8 @@ class TabBarViewContent extends StatelessWidget {
     required this.onScroll,
   });
 
-  final List<Post> forYouPosts; // Posts para "For You"
-  final List<Post> followingPosts; // Posts para "Following"
+  final List<Post> forYouPosts; 
+  final List<Post> followingPosts; 
   final bool isLoading;
   final ScrollController onScroll;
 
@@ -31,6 +31,7 @@ class TabBarViewContent extends StatelessWidget {
         // Pestaña "Following"
         FollowingCards(
           posts: followingPosts, // Pasa los posts para "Following"
+          
         ),
       ],
     );
