@@ -15,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = ApiService();
   final ScrollController _scrollController = ScrollController();
-
   List<Post> forYouPosts = []; // Para "For You"
   List<Post> followingPosts = []; // Para "Following"
   bool isLoading = false;
